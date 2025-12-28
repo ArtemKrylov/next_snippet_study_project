@@ -1,6 +1,6 @@
 import Button from "@/components/button";
 import TextInput from "@/components/textInput";
-import db from "@/db";
+import { db } from "@/db";
 import { NextPage } from "next";
 import { redirect } from "next/navigation";
 
@@ -11,9 +11,9 @@ const CreateSnippetPage: NextPage = async ({}) => {
     const code = formData.get("snippetText") as string;
     if (!title || !code) return;
 
-    // await db.snippet.create({
-    //   data: { title, code },
-    // });
+    await db.snippet.create({
+      data: { title, code },
+    });
     redirect("/");
   };
 
