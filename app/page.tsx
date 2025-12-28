@@ -1,9 +1,22 @@
-export default function HomePage() {
+import { db } from "@/db";
+
+export default async function HomePage() {
+  const snippets = await db.snippet.findMany();
+  console.log("snippets :", snippets);
+
   return (
     <div className="pageContainer">
-      {/* <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start"> */}
-      HomePage
-      {/* </main> */}
+      <div className="flex flex-col gap-5">
+        {snippets?.map(({ id, title, code }) => (
+          <div
+            key={id}
+            className="w-full text-center"
+          >
+            <span className="mr-4">{title}:</span>
+            <span>{code}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
