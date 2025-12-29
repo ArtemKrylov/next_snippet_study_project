@@ -4,7 +4,7 @@ import { FC } from "react";
 
 interface ButtonProps {
   name: string;
-  onClick?: () => void;
+  click?: () => void;
   type?: "submit" | "button";
   disabled?: boolean;
   noFunctional?: boolean;
@@ -13,23 +13,21 @@ interface ButtonProps {
 
 const Button: FC<ButtonProps> = ({
   name,
-  onClick = () => {},
+  click = () => {},
   type = "button",
   disabled = false,
   noFunctional = false,
   className = "",
 }) => {
   return (
-    <div>
-      <button
-        onClick={onClick}
-        type={type}
-        disabled={disabled || noFunctional}
-        className={`rounded py-2 px-7 cursor-pointer bg-blue-950 hover:bg-blue-800 ${className}`}
-      >
-        {name}
-      </button>
-    </div>
+    <button
+      onClick={click}
+      type={type}
+      disabled={disabled || noFunctional}
+      className={`rounded py-2 px-7 cursor-pointer bg-blue-950 hover:bg-blue-800 text-center ${className}`}
+    >
+      {name}
+    </button>
   );
 };
 

@@ -1,3 +1,4 @@
+import Button from "@/components/button";
 import { db } from "@/db";
 import { ISnippet } from "@/ts/types";
 import { NextPage } from "next";
@@ -21,8 +22,16 @@ const SnippetViewPage: NextPage<SnippetViewPageProps> = async (props) => {
   return (
     <div className="pageContainer">
       <div className="flex flex-col items-center justify-center w-full gap-5">
-        <div className="">{title}</div>
-        <div className="">{code}</div>
+        <div className="w-[50%] mb-2 flex items-center justify-between">
+          <span className="text-xl font-bold">{title}</span>
+          <div className="flex gap-4">
+            <Button name="Edit" />
+            <Button name="Delete" />
+          </div>
+        </div>
+        <pre className="border-gray-200 rounded w-[90%] min-h-50 p-5 bg-gray-200">
+          <code>{code}</code>
+        </pre>
       </div>
     </div>
   );
