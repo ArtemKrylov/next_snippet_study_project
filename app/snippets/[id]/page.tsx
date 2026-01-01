@@ -1,9 +1,11 @@
 import Button from "@/components/button";
 import { db } from "@/db";
-import { ISnippet } from "@/ts/types";
+import { deleteSnippetAction } from "@/serverActions/snippetActions";
+import { swalCustom } from "@/utils/swalCustom";
+import { Snippet } from "@prisma/client";
 import { NextPage } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 interface SnippetViewPageProps {
   params: Promise<{ id: string }>;
@@ -11,14 +13,29 @@ interface SnippetViewPageProps {
 
 const SnippetViewPage: NextPage<SnippetViewPageProps> = async (props) => {
   const { id: stringId } = await props.params;
+  const id = +stringId;
 
-  const snippet: ISnippet | null = await db.snippet.findFirst({
-    where: { id: +stringId },
+  const snippet: Snippet | null = await db.snippet.findFirst({
+    where: { id },
   });
 
   if (!snippet) return notFound();
 
   const { title, code } = snippet;
+
+  async function onDeleteSnippet() {
+    "use server";
+
+    await deleteSnippetAction(id);
+
+    redirect("/");
+
+    // swalCustom.confirm(async () => {
+    //   await deleteSnippetAction(id);
+
+    //   redirect("/");
+    // });
+  }
 
   return (
     <div className="pageContainer">
@@ -29,7 +46,10 @@ const SnippetViewPage: NextPage<SnippetViewPageProps> = async (props) => {
             <Link href={`/snippets/${stringId}/edit`}>
               <Button name="Edit" />
             </Link>
-            <Button name="Delete" />
+            <Button
+              name="Delete"
+              onClick={onDeleteSnippet}
+            />
           </div>
         </div>
         <pre className="border-gray-200 rounded w-[90%] min-h-50 p-5 bg-gray-200">
