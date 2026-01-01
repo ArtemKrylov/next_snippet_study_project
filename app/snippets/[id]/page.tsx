@@ -2,6 +2,7 @@ import Button from "@/components/button";
 import { db } from "@/db";
 import { ISnippet } from "@/ts/types";
 import { NextPage } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 interface SnippetViewPageProps {
@@ -25,7 +26,9 @@ const SnippetViewPage: NextPage<SnippetViewPageProps> = async (props) => {
         <div className="w-[50%] mb-2 flex items-center justify-between">
           <span className="text-xl font-bold">{title}</span>
           <div className="flex gap-4">
-            <Button name="Edit" />
+            <Link href={`/snippets/${stringId}/edit`}>
+              <Button name="Edit" />
+            </Link>
             <Button name="Delete" />
           </div>
         </div>
