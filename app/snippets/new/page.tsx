@@ -1,46 +1,72 @@
+"use client";
+
 import Button from "@/components/button";
 import TextInput from "@/components/textInput";
-import { db } from "@/db";
+
+import { createSnippetAction } from "@/serverActions/snippetActions";
 import { NextPage } from "next";
 import { redirect } from "next/navigation";
+import { useActionState } from "react";
 
-const CreateSnippetPage: NextPage = async ({}) => {
-  const createSnippet = async (formData: FormData) => {
-    "use server";
-    const title = formData.get("snippetName") as string;
-    const code = formData.get("snippetText") as string;
-    if (!title || !code) return;
+const CreateSnippetPage: NextPage = ({}) => {
+  async function createSnippet(
+    formState: { message: string },
+    formData: FormData
+  ) {
+    const title = formData.get("title");
+    const code = formData.get("code");
 
-    await db.snippet.create({
-      data: { title, code },
-    });
+    if (!title || !code) return { message: "Fill in all fields!" };
+    if (typeof title !== "string" || title.length < 3)
+      return { message: "Too short title" };
+    if (typeof code !== "string" || code.length < 5)
+      return { message: "Too short code" };
+
+    try {
+      await createSnippetAction({ title, code });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return { message: error.message };
+      }
+
+      return { message: "Something went wrong... Try again, please" };
+    }
+
     redirect("/");
-  };
+  }
+
+  const [{ message }, formAction] = useActionState(createSnippet, {
+    message: "",
+  });
 
   return (
     <div className="pageContainer">
       <form
         className="flex flex-col gap-5 items-center justify-center w-70 self-center"
-        action={createSnippet}
+        action={formAction}
       >
         <h1 className="font-bold">Create new snippet</h1>
         <TextInput
           label="Name"
-          name="snippetName"
+          name="title"
           grow
           width="12rem"
         />
         <TextInput
           label="Text"
           textArea
-          name="snippetText"
+          name="code"
           grow
           width="12rem"
         />
+        {message && (
+          <div className="p-2 my-2 border rounded bg-red-200 text-red-500">
+            {message}
+          </div>
+        )}
         <Button
           type="submit"
           name="Save"
-          // onClick={onSaveSnippetBtnClick}
         />
       </form>
     </div>
