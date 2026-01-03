@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { editSnippetAction } from "@/serverActions/snippetActions";
 
 import { NextPage } from "next";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 interface SnippetEditPageProps {
@@ -20,6 +21,7 @@ const SnippetEditPage: NextPage<SnippetEditPageProps> = async (props) => {
 
     await editSnippetAction({ id, code: value ?? "" });
 
+    revalidatePath(`/snippets/${id}`);
     redirect(`/snippets/${id}`);
   };
 

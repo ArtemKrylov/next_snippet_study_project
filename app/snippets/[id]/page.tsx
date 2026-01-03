@@ -1,9 +1,9 @@
 import Button from "@/components/button";
 import { db } from "@/db";
 import { deleteSnippetAction } from "@/serverActions/snippetActions";
-import { swalCustom } from "@/utils/swalCustom";
 import { Snippet } from "@prisma/client";
 import { NextPage } from "next";
+import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
@@ -28,6 +28,7 @@ const SnippetViewPage: NextPage<SnippetViewPageProps> = async (props) => {
 
     await deleteSnippetAction(id);
 
+    revalidatePath("/");
     redirect("/");
 
     // swalCustom.confirm(async () => {
@@ -61,3 +62,11 @@ const SnippetViewPage: NextPage<SnippetViewPageProps> = async (props) => {
 };
 
 export default SnippetViewPage;
+
+export async function generateStaticParams() {
+  const snippets = await db.snippet.findMany();
+
+  return snippets.map((snippet) => ({
+    id: snippet.id.toString(),
+  }));
+}
