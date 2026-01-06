@@ -3,7 +3,8 @@
 import { useState } from "react";
 import CodeEditor from "./codeEditor";
 import Button from "./button";
-import { Snippet } from "@prisma/client";
+import { Snippet } from "@/generated/prisma";
+// import { Snippet } from "@prisma/client";
 
 type Props = {
   snippet: Snippet | null | undefined;

@@ -1,7 +1,8 @@
 import Button from "@/components/button";
 import { db } from "@/db";
+import { Snippet } from "@/generated/prisma";
 import { deleteSnippetAction } from "@/serverActions/snippetActions";
-import { Snippet } from "@prisma/client";
+// import { Snippet } from "@prisma/client";
 import { NextPage } from "next";
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
